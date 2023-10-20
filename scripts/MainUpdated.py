@@ -1,3 +1,4 @@
+import sys
 import time
 from client import ClientSocket
 from argparse import ArgumentParser
@@ -47,4 +48,9 @@ def play_game(strategy, args):
 
 
 if __name__ == '__main__':
-    play_game(strategy=1 , args=args(ip="localhost" , port=5555))
+
+    ip = str(sys.argv[1])
+    port = int(sys.argv[2])
+    strategy = int(sys.argv[3])
+
+    play_game(strategy=strategy , args=args(ip=ip , port=port))
