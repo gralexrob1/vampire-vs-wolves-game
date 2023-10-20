@@ -73,32 +73,60 @@ class Game_Manager:
         return possible_dest
     
 
-    def compute_next_move(self , upd_array):
+    def compute_next_move(self , upd_array, strategy):
         # Takes in an_updated_map
         # Returns no of moves (int) , list of moves [[x1,y1,n,x2,y2] , ...]
-        moves = []
+        
         print(f"upd func : {upd_array}")
 
         self.map.change_with_upd(upd_array)
         dep_list = self.map.make_departure_list()
+        targ_hum = self.map.make_target_list(human=True)
+        targ_ene = self.map.make_target_list(enemy=True)
+
+        if strategy == "strat_name":
+            # return self.conpute_move_function(dep_list , targ_hum , targ_ene)
+            pass
+        else:
+            return self.compute_move_random(dep_list , targ_hum , targ_ene)
         
+        
+        
+    
+
+    def compute_move_template(self , dep_list , target_human , target_enemy):
+        # In :
+        #   dep_list     [Place]
+        #   target_human [Place]
+        #   target_enemy [Place]
+        #
+        # Out :
+        #   best moves
+        pass
+
+
+
+    def compute_move_random(self , dep_list , target_human , target_enemy):
+        # Example compute_move function
+        # Returns n of moves , [moves]
+        moves = []
+
         for dep in dep_list:
             possible_targets = self.avoid_walls([dep.x , dep.y] , self.grid)
 
-
             if len(possible_targets) > 0:
-                target_coord = possible_targets[random.randint(0 , len(possible_targets)-1)]
-                    
+                target_coord = possible_targets[random.randint(0 , len(possible_targets)-1)] 
                 move = [dep.x , dep.y , 1 , target_coord[0] , target_coord[1]]
                 moves.append(move)
                 break # send only 1 move at a time ?
-                
-            
-        
+
         print(f"Sending {len(moves)} moves : {moves}")
         return len(moves) , moves
 
 
+
+    """
+    # Test compute_move function
     def compute_best_move(self , dep_list , target_human , target_enemy):
         # In :
         #   dep_list     [Place]
@@ -121,12 +149,8 @@ class Game_Manager:
                     selected_target = t_h
                     seleced_dep = dep
                     print(f"dep. : {dep} , target : {t_h}")
-
-
-                
-
         pass
-
+    """
 
 
 

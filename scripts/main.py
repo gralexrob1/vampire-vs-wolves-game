@@ -1,41 +1,56 @@
+import sys
 import time
-
 from client import ClientSocket
 from argparse import ArgumentParser
+import random
+from GameManager import Game_Manager
+
+
+GGs_game_manager = Game_Manager()
+
+
+
+
+class args:
+    def __init__(self , ip , port):
+        self.ip = ip
+        self.port = port
 
 
 def play_game(strategy, args):
     client_socket = ClientSocket(args.ip, args.port)
-    client_socket.send_nme("NOM DE VOTRE IA")
+    client_socket.send_nme("GGs AI")
     # set message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    GGs_game_manager.initial_game_update(message)
     # hum message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    GGs_game_manager.initial_game_update(message)
     # hme message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    GGs_game_manager.initial_game_update(message)
     # map message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    GGs_game_manager.initial_game_update(message)
 
     # start of the game
     while True:
         message  = client_socket.get_message()
         time_message_received = time.time()
-        UPDATE_GAME_STATE(message)
+        
+        GGs_game_manager.initial_game_update(message)
+
         if message[0] == "upd":
-            nb_moves, moves = COMPUTE_NEXT_MOVE(GAME_STATE)
+            # Update : after opponent's turn
+            nb_moves, moves = GGs_game_manager.compute_next_move(message[0], strategy=strategy)
             client_socket.send_mov(nb_moves, moves)
+            
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
 
-    parser.add_argument(dest='ip', default='localhost', type=str, help='IP adress the connection should be made to.')
-    parser.add_argument(dest='port', default='5555', type=int, help='Chosen port for the connection.')
+    ip = str(sys.argv[1])
+    port = int(sys.argv[2])
+    strategy = int(sys.argv[3])
 
-    args = parser.parse_args()
-    
-    play_game()
+    play_game(strategy=strategy , args=args(ip=ip , port=port))
