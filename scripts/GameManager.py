@@ -22,7 +22,6 @@ class Game_Manager:
 
 
 
-
     def set_current_species(self , start_map , start_pos):
         if self.species_is_set:
             return # guard statement ?
@@ -85,9 +84,10 @@ class Game_Manager:
         targ_ene = self.map.make_target_list(enemy=True)
 
         if strategy == "strat_name":
-            # return self.conpute_move_function(dep_list , targ_hum , targ_ene)
+            # return self.compute_move_function(dep_list , targ_hum , targ_ene)
             pass
         else:
+            # default is random moves
             return self.compute_move_random(dep_list , targ_hum , targ_ene)
         
         
@@ -95,20 +95,25 @@ class Game_Manager:
     
 
     def compute_move_template(self , dep_list , target_human , target_enemy):
-        # In :
-        #   dep_list     [Place]
-        #   target_human [Place]
-        #   target_enemy [Place]
-        #
-        # Out :
-        #   best moves
+        """
+        In :
+            dep_list     [Place]
+            target_human [Place]
+            target_enemy [Place]
+        Out :
+            best moves
+        """
         pass
 
+    
 
 
     def compute_move_random(self , dep_list , target_human , target_enemy):
-        # Example compute_move function
-        # Returns n of moves , [moves]
+        """
+        Example compute_move function
+        Returns n of moves , [moves]
+        """
+        
         moves = []
 
         for dep in dep_list:
@@ -123,35 +128,34 @@ class Game_Manager:
         print(f"Sending {len(moves)} moves : {moves}")
         return len(moves) , moves
 
+    
+    def compute_move_avoid(self , dep_list , target_human , target_enemy):
+        min_dist = 9999 # Large 1st dist, if smaller found, update
+        best_dep = Place([0,0,0,0,0])
+        best_hum = Place([0,0,0,0,0])
 
 
-    """
-    # Test compute_move function
-    def compute_best_move(self , dep_list , target_human , target_enemy):
-        # In :
-        #   dep_list     [Place]
-        #   target_human [Place]
-        #   target_enemy [Place]
-        #
-        # Out :
-        #   best Move
+        for dep in dep_list:
+            for hum in target_enemy:
+                # calculate distance from all player to all humans
+                dist = self.map.calc_distance_moves(dep , hum)
 
-        dist = 100
-        selected_target = Place([0,0,0,0,0])
-        seleced_dep = Place([0,0,0,0,0])
+                if dist < min_dist:
+                    min_dist = dist
+                    best_dep = dep
+                    best_hum = hum
         
+        print(f"d={min_dist} from {best_dep} to {best_hum}")
 
-        for t_h in target_human:
-            for dep in dep_list:
-                dist_n = self.map.calc_distance_moves(t_h , dep)
-                if dist_n < dist:
-                    dist = dist_n
-                    selected_target = t_h
-                    seleced_dep = dep
-                    print(f"dep. : {dep} , target : {t_h}")
+        # Now make the move
+        possible_targets = self.avoid_walls([best_dep.x , best_dep.y] , self.grid)
+
+
+        # Avoid enemies
+        # ...
         pass
-    """
 
+    
 
 
     def initial_game_update(self , message):
