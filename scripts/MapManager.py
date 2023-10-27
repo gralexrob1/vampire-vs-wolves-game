@@ -133,10 +133,14 @@ class Map_Manager:
         return (pos1.x == pos2.x and pos1.y == pos2.y)
         
 
-    def calc_distance_float(self , pos1:Place , pos2:Place):
-        pass
-
     def calc_distance_moves(self , pos1:Place , pos2:Place):
+        """
+        In :
+            pos1    Place
+            pos2    Place
+        Out :
+            minimum distance in units of moves   int
+        """
         dx = abs(pos1.x - pos2.x)
         dy = abs(pos1.y - pos2.y)
 
