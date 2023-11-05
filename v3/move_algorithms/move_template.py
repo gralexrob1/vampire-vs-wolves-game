@@ -34,10 +34,10 @@ def compute_move_random(map_lists , grid):
     moves = []
 
     for dep in dep_list:
-        possible_targets = avoid_places(possible_dest=avoid_walls([dep.x , dep.y] , grid),
-                                        place_list=dep_list)
+        possible_targets = find_possible_dest(pos=[dep.x , dep.y],
+                                              grid=grid,
+                                              dep_list=dep_list)
 
-        
 
         if len(possible_targets) > 0:
             target_coord = possible_targets[random.randint(0 , len(possible_targets)-1)] 
