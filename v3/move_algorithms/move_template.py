@@ -43,7 +43,7 @@ def compute_move_random(map_lists , grid):
             target_coord = possible_targets[random.randint(0 , len(possible_targets)-1)] 
             move = [dep.x , dep.y , 1 , target_coord[0] , target_coord[1]]
             moves.append(move)
-            #break # send only 1 move at a time ?
+            
 
     print(f"Sending {len(moves)} moves : {moves}")
     return len(moves) , moves
