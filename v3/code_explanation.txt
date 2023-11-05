@@ -1,0 +1,17 @@
+v2: Code Structure
+
+
+1. Game start:
+	main.py play_game()
+2. At each turn:
+	main.py game_manager.request_next_move()
+
+	game_manager.py in request_next_move():
+		get map info
+		move_manager.compute_move()
+
+	move_manager.py in compute_move():
+		run compute_move_function()
+
+	game_move_file.py in compute_move_function()
+		find a good move - implement algorithm here
