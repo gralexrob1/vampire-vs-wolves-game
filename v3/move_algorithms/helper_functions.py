@@ -34,13 +34,17 @@ def distance_in_moves(pos1:Place , pos2:Place):
         return min_diag
 
 
-def avoid_walls(pos , grid):
+def find_possible_dest (pos , grid , dep_list):
     """
     In:
-        pos    [x,y]
-        grid   [m,n]
+        pos       [x,y]
+        grid      [m,n]
+        dep_list  [Place]
     Out:
         possible destinations [[x1,y1] , [x2,y2] , ...]
+
+    Find the possible destinations around pos, given that the departure places
+    are not valid destinations
     """
     x = pos[0]
     y = pos[1]
@@ -61,26 +65,15 @@ def avoid_walls(pos , grid):
     for dest in all_dest:
         if dest[0] >= 0 and dest[0] <= max_x and dest[1] >= 0 and dest[1] <= max_y:
             possible_dest.append(dest)
-    return possible_dest
+    
+    # possible dest is avoid walls here
 
-
-def avoid_places (possible_dest , place_list):
-    """
-    In:
-        possible_dest [[x1,y1] , [x2,y2] , ...]
-        place_list    [Place]
-    Out:
-        possible_dest - place_list [[x1,y1] , [x2,y2] , ...]
-
-    Removes any place (from place_list), from possible_dest (from avoid_walls())
-    to be used with the departure list, because departure places are not valid destinations
-    """
     out = []
 
     for dest in possible_dest:
 
         is_poss = True
-        for place in place_list:
+        for place in dep_list:
             if place.x == dest[0] and place.y == dest[1]:
                 is_poss = False
                 break
@@ -88,4 +81,5 @@ def avoid_places (possible_dest , place_list):
         if is_poss:
             out.append(dest)
 
+    # out is avoid walls + avoid departure places
     return out
