@@ -38,13 +38,11 @@ def compute_move_random(map_lists , grid):
                                               grid=grid,
                                               dep_list=dep_list)
 
-
         if len(possible_targets) > 0:
             target_coord = possible_targets[random.randint(0 , len(possible_targets)-1)] 
             move = [dep.x , dep.y , 1 , target_coord[0] , target_coord[1]]
             moves.append(move)
             
-
     print(f"Sending {len(moves)} moves : {moves}")
     return len(moves) , moves
 
