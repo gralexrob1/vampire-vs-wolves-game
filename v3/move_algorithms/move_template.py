@@ -31,7 +31,7 @@ def compute_move_random(map_lists , grid):
     target_human = map_lists[1] # [Place]
     target_enemy = map_lists[2] # [Place]
 
-    moves = []
+    moves = [] # [ [x1 , y1 , n , x2 , y2] , ... ]
 
     for dep in dep_list:
         possible_targets = find_possible_dest(pos=[dep.x , dep.y],
@@ -57,7 +57,7 @@ def compute_move_template(map_lists , grid):
     dep_list = map_lists[0]     # [Place]
     target_human = map_lists[1] # [Place]
     target_enemy = map_lists[2] # [Place]
-    moves = []
+    moves = [] # [ [x1 , y1 , n , x2 , y2] , ... ]
 
     # add code here ...
 
