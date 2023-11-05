@@ -37,7 +37,7 @@ class MapManager:
         
         Updates the map with the previous turn's moves
         """
-        print(f"UPD ARRAY = {upd_array}")
+        
         out_map = []
         for place in self.map:
             update_found_for_place = False
