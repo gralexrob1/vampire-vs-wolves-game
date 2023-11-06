@@ -13,16 +13,39 @@ def compare_place_pos(pos1:Place , pos2:Place) -> bool:
     return (pos1.x == pos2.x and pos1.y == pos2.y)
 
 
-def distance_in_moves(pos1:Place , pos2:Place):
+def distance_in_moves(pos1 , pos2):
     """
     In:
-        pos1    Place
-        pos2    Place
+        pos1    Place or [x,y]
+        pos2    Place or [x,y]
     Out:
         minimum distance in units of moves   int
     """
-    dx = abs(pos1.x - pos2.x)
-    dy = abs(pos1.y - pos2.y)
+    x1 = None
+    y1 = None
+    x2 = None
+    y2 = None
+
+    dx = None
+    dy = None
+
+    if type(pos1) == Place:
+        x1 = pos1.x
+        y1 = pos1.y
+    elif type(pos1) == list:
+        x1 = pos1[0]
+        y1 = pos1[1]
+        
+    if type(pos2) == Place:
+        x2 = pos2.x
+        y2 = pos2.y
+    elif type(pos2) == list:
+        x2 = pos2[0]
+        y2 = pos2[1]
+
+    dx = abs(x1 - x2)
+    dy = abs(y1 - y2)
+
 
     if dx > dy:
         min_diag = dy
