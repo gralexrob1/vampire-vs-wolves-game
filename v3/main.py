@@ -44,5 +44,5 @@ def play_game(strategy, args):
 if __name__ == '__main__':
     ip = str(sys.argv[1]) # "localhost"
     port = int(sys.argv[2]) # 5555
-    strategy = str(sys.argv[3]) # "random"
+    strategy = str(sys.argv[3]) # "random" or "seek"
     play_game(strategy=strategy , args=args(ip=ip , port=port))
