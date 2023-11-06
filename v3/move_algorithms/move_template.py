@@ -27,9 +27,9 @@ def compute_move_random(map_lists , grid):
     Example compute_move function
     Returns len([moves]) , [moves]
     """
-    dep_list = map_lists[0]     # [Place]
-    target_human = map_lists[1] # [Place]
-    target_enemy = map_lists[2] # [Place]
+    dep_list = map_lists[0]     # [Place] list where there are some of current species
+    target_human = map_lists[1] # [Place] list of humans
+    target_enemy = map_lists[2] # [Place] list of enemies
 
     moves = [] # [ [x1 , y1 , n , x2 , y2] , ... ]
 
@@ -52,9 +52,9 @@ def compute_move_template(map_lists , grid):
     """
     Template for a compute_move_function
     """
-    dep_list = map_lists[0]     # [Place]
-    target_human = map_lists[1] # [Place]
-    target_enemy = map_lists[2] # [Place]
+    dep_list = map_lists[0]     # [Place] list where there are some of current species
+    target_human = map_lists[1] # [Place] list of humans
+    target_enemy = map_lists[2] # [Place] list of enemies
     moves = [] # [ [x1 , y1 , n , x2 , y2] , ... ]
 
     # add code here ...
