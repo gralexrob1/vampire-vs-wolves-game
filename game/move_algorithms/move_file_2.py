@@ -74,8 +74,11 @@ def compute_move_expect(map_lists , grid):
     return len(moves) , moves
 
 def compute_expected_outcome_value(E1 : int, E2: int, enemy = True) -> float:
-
-    if enemy == False:
+    # E1 = number of our species
+    # E2 = number of humans (if enemy = False) or enemies ( if enemy = True)
+    # returns the expected value of going on the same coordinates
+    
+    if enemy == False: # human
         
         if E1 >= E2:
            E1 += E2
@@ -85,7 +88,7 @@ def compute_expected_outcome_value(E1 : int, E2: int, enemy = True) -> float:
             E1 = E1**3/(2*E2)**2 + (E1**2)/(4*E2)
             E2 = ((1-(E1/(2*E2)))**2)*E2
     
-    if enemy == True:
+    if enemy == True: # enemies
         
         if E1 > 1.5*E2:
            E1 = E1
