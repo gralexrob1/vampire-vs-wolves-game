@@ -73,8 +73,37 @@ def compute_move_expect(map_lists , grid):
 
     return len(moves) , moves
 
+def compute_expected_outcome_value(E1 : int, E2: int, enemy = True) -> float:
 
+    if enemy == False:
+        
+        if E1 >= E2:
+           E1 += E2
+           E2 = 0
 
+        else:
+            E1 = E1**3/(2*E2)**2 + (E1**2)/(4*E2)
+            E2 = ((1-(E1/(2*E2)))**2)*E2
+    
+    if enemy == True:
+        
+        if E1 > 1.5*E2:
+           E1 = E1
+           E2 = 0 
+        
+        elif E1 == E2:
+           E1 = 0.25*E1
+           E2 = 0.25*E2
+        
+        elif (E2 < E1 < 1.5*E2):
+           E1 = E1*((E1/E2)-0.5)**2
+           E2 = E2*(1-((E1/E2)-0.5))**2
+        
+        else:
+           E1 = E1*(E1/(2*E2))**2
+           E2 = E2*(1-(E1/(2*E2)))**2
+    
+    return E1,E2
 
-def compute_expected_outcome_value(E1:int , E2:int) -> float:
-    pass
+E1,E2 = compute_expected_outcome_value(2,5,enemy = False)
+print(E1,E2)
