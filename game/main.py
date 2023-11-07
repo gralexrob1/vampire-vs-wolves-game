@@ -6,10 +6,11 @@ from managers.game_manager import GameManager
 game_manager = GameManager()
 
 
-class args:
-    def __init__(self , ip , port):
+class Args:
+    def __init__(self , ip , port, strategy):
         self.ip = ip
         self.port = port
+        self.strategy = strategy
 
 
 def play_game(strategy, args):
@@ -37,7 +38,7 @@ def play_game(strategy, args):
 
         if message[0] == "upd":
             # Update : after opponent's turn
-            nb_moves, moves = game_manager.request_next_move(message[1], strategy=strategy)
+            nb_moves, moves = game_manager.request_next_move(message[1], strategy=args.strategy)
             client_socket.send_mov(nb_moves, moves)
             
 
@@ -45,4 +46,4 @@ if __name__ == '__main__':
     ip = str(sys.argv[1]) # "localhost"
     port = int(sys.argv[2]) # 5555
     strategy = str(sys.argv[3]) # "random" or "seek"
-    play_game(strategy=strategy , args=args(ip=ip , port=port))
+    play_game(strategy=strategy , args=Args(ip=ip , port=port, strategy=strategy))
