@@ -88,7 +88,7 @@ def compute_move_seek(map_lists , grid):
         # list all target -> human and order by distance
         targ_hum_dist = [] # [ [dist , targ , hum] , ... ]
         for target in possible_targets:
-            targ_hum_dist.append([distance_in_moves(target, best_hum) , target , best_hum])
+            targ_hum_dist.append([distance_in_moves(target, best_hum , diag_weight=1.5) , target , best_hum])
         targ_hum_dist = sorted(targ_hum_dist, key=lambda x: x[0])
 
         # IF len(targ_hum_dist) == 0 !!!!! when there are no humans ?
