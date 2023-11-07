@@ -23,7 +23,7 @@ class GameManager:
         """
         # Get info form map
         self.map.change_with_upd(upd_array)
-        dep_list = self.map.make_departure_list()
+        dep_list = self.map.make_target_list(dep=True)
         target_human = self.map.make_target_list(human=True)
         target_enemy = self.map.make_target_list(enemy=True)
 
