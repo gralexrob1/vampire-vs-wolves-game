@@ -13,11 +13,12 @@ def compare_place_pos(pos1:Place , pos2:Place) -> bool:
     return (pos1.x == pos2.x and pos1.y == pos2.y)
 
 
-def distance_in_moves(pos1 , pos2):
+def distance_in_moves(pos1 , pos2 , diag_weight=1):
     """
     In:
         pos1    Place or [x,y]
         pos2    Place or [x,y]
+        diag_weight       int    (moving in a diagonal counts as 1 move, but it may be useful to be able to adjust it)
     Out:
         minimum distance in units of moves   int
     """
@@ -48,13 +49,16 @@ def distance_in_moves(pos1 , pos2):
 
 
     if dx > dy:
-        min_diag = dy
+        min_diag = dy * diag_weight
         min_diag += dx - dy
         return min_diag
     else:
-        min_diag = dx
+        min_diag = dx * diag_weight
         min_diag += dy - dx
         return min_diag
+
+
+
 
 
 def find_possible_dest (pos , grid , dep_list):
