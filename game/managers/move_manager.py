@@ -1,5 +1,6 @@
 from move_algorithms.move_template import compute_move_random
 from move_algorithms.move_file_1 import *
+from move_algorithms.move_file_2 import *
 
 
 class MoveManager:
@@ -12,4 +13,6 @@ class MoveManager:
             return compute_move_random(map_lists , grid)
         elif strategy == "seek":
             return compute_move_seek(map_lists , grid)
+        elif strategy == "expect":
+            return compute_move_expect(map_lists , grid)
         # List the strategies here
