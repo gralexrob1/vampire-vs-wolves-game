@@ -60,23 +60,7 @@ class MapManager:
         self.map = out_map
 
 
-    def make_departure_list(self):
-        """
-        Return [Place] where there are species
-        """
-        out = []
-        for place in self.map:
-            
-            if self.species == 0:
-                if place.vampires != 0:
-                    out.append(place)
-            elif self.species == 1:
-                if place.werewolves != 0:
-                    out.append(place)
-        return out
-
-
-    def make_target_list(self , human=False , enemy=False):
+    def make_target_list(self , human=False , enemy=False , dep=False):
         """
         Return [Place] where there are human or enemy or both
         """
@@ -92,6 +76,16 @@ class MapManager:
                 elif self.species == 1:
                     if place.werewolves != 0:
                         out.append(place)
+            if dep:
+                out = []
+                for place in self.map:
+                    if self.species == 0:
+                        if place.vampires != 0:
+                            out.append(place)
+                    elif self.species == 1:
+                        if place.werewolves != 0:
+                            out.append(place)
+
         return out
 
 
