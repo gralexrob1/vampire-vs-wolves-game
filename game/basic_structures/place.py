@@ -19,3 +19,30 @@ class Place:
 
     def __str__(self):
         return f"P[{self.x} {self.y} {self.humans} {self.vampires} {self.werewolves}]"
+
+    def get_n_from_sp_int(self , sp):
+        """
+        Get the number of species in Place from int value:
+        vampires   : 0
+        werewolves : 1
+
+        In:
+            sp      int
+        Out:
+            number  int
+        """
+        if sp == 0:
+            return self.vampires
+        elif sp == 1:
+            return self.werewolves
+        
+    def get_species_in_place(self):
+        """
+        Get the current species in Place
+        vampires   : 0
+        werewolves : 1
+        """
+        if self.vampires != 0:
+            return 0
+        elif self.werewolves != 0:
+            return 1
