@@ -31,18 +31,26 @@ def compute_move_expect(map_lists , grid):
         # 1st make a list of targets and the value to go to them (humans and enemies combined)
         human_list = []
         for target in target_human:
-            distance = distance_in_moves(dep , target)
+            distance = float(distance_in_moves(dep , target))
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
-                                                            E2=target.humans)
-            human_list.append([target , expected_value/distance])
+                                                            E2=target.humans,
+                                                            enemy=False)
+            value = expected_value
+            if distance != 0:
+                value = expected_value/distance
+            human_list.append([target , value])
 
 
         enemy_list = []
         for target in target_enemy:
-            distance = distance_in_moves(dep , target)
+            distance = float(distance_in_moves(dep , target))
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
-                                                            E2=target.get_species_in_place())
-            enemy_list.append([target , expected_value/distance])
+                                                            E2=target.get_species_in_place(),
+                                                            enemy=True)
+            value = expected_value
+            if distance != 0:
+                value = expected_value/distance
+            enemy_list.append([target , value])
 
 
         combined_list = human_list + enemy_list
@@ -62,18 +70,25 @@ def compute_move_expect(map_lists , grid):
             dest_target.append([possible_dest , distance])
         dest_target = sorted(dest_target , key=lambda x: x[1])
 
-        best_dest = dest_target[0][0]
+        best_dest = dest_target[0][0][0]
+        print(f"best_dest={best_dest}")
 
         # Now append this move to moves
         move = [dep.x , dep.y , n_in_dep , best_dest[0] , best_dest[1]]
-        moves.append(moves)
+        moves.append(move)
 
 
 
-
+    print(f"send {len(moves)} moves")
+    print(f"n: {len(moves)}, moves: {moves}")
     return len(moves) , moves
 
-def compute_expected_outcome_value(E1 : int, E2: int, enemy = True) -> float:
+
+
+
+
+
+def compute_expected_outcome_value(E1 : int, E2: int, enemy: bool) -> float:
     # E1 = number of our species
     # E2 = number of humans (if enemy = False) or enemies ( if enemy = True)
     # returns the expected value of going on the same coordinates
@@ -106,7 +121,5 @@ def compute_expected_outcome_value(E1 : int, E2: int, enemy = True) -> float:
            E1 = E1*(E1/(2*E2))**2
            E2 = E2*(1-(E1/(2*E2)))**2
     
-    return E1,E2
+    return E1#,E2
 
-E1,E2 = compute_expected_outcome_value(2,5,enemy = False)
-print(E1,E2)
