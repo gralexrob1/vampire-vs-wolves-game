@@ -60,6 +60,8 @@ class MapManager:
         self.map = out_map
 
 
+
+
     def make_target_list(self , human=False , enemy=False , dep=False):
         """
         Return [Place] where there are human or enemy or both
