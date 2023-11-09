@@ -73,10 +73,10 @@ class MapManager:
                     out.append(place)
             if enemy:
                 if self.species == 0:
-                    if place.vampires != 0:
+                    if place.werewolves != 0:
                         out.append(place)
                 elif self.species == 1:
-                    if place.werewolves != 0:
+                    if place.vampires != 0:
                         out.append(place)
             if dep:
                 out = []
