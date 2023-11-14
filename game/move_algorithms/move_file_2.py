@@ -1,5 +1,6 @@
 from basic_structures.place import Place
 from move_algorithms.helper_functions import *
+from math import sqrt
 
 """
 Still working on this
@@ -32,58 +33,67 @@ def compute_move_expect(map_lists , grid):
         n_in_dep = dep.get_n_from_sp_int(species)
 
         # 1st make a list of targets and the value to go to them (humans and enemies combined)
-        human_list = []
+        combined_list = [] # [ [target , value] , ... ]
+        avoid_list = []    # [ target , ... ]
+
+        
         for target in target_human:
-            distance = float(distance_in_moves(dep , target))
+            distance = float(distance_(dep , target))
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
                                                             E2=target.humans,
                                                             enemy=False)
-            value = expected_value
-            if distance != 0:
-                value = expected_value/distance
-            human_list.append([target , value])
+            if expected_value < n_in_dep:
+                avoid_list.append(target)
+            else:
+                value = expected_value
+                if distance != 0:
+                    value = expected_value/distance
+                combined_list.append([target , value])
 
 
-        enemy_list = []
+        
         for target in target_enemy:
-            distance = float(distance_in_moves(dep , target))
+            distance = float(distance_(dep , target))
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
                                                             E2=target.get_n_from_sp_int(ene_sp),
                                                             enemy=True)
-            value = expected_value
-            if distance != 0:
-                value = expected_value/distance
-            enemy_list.append([target , value])
+            if expected_value < n_in_dep:
+                avoid_list.append(target)
+            else:
+                value = expected_value
+                if distance != 0:
+                    value = expected_value/distance
+                combined_list.append([target , value])
 
 
-        combined_list = human_list + enemy_list
-        combined_list = sorted(combined_list , key=lambda x: x[1] , reverse=True)
-
-        #print(f"value: {combined_list}")
-
-        v_pri = []
-        for object in combined_list:
-            t , v = object
-            v_pri.append([[t.x , t.y] , v])
-
-        print(f"value: {v_pri}")
+        
+        
+        best_target = max(combined_list , key=lambda x: x[1])[0]
 
 
-        best_target = combined_list[0][0]
+        # find bad targets and add them to an avoid list
+        avoid_zones = []
+        for avoid in avoid_list:
+            avoid_zones += make_avoid_zone(avoid)
+
+        print("avoid" , avoid_list)
+
+
 
         # Now find possible destination from dep
         possible_dest = find_possible_dest(pos=[dep.x , dep.y],
                                            grid=grid,
-                                           dep_list=dep_list)
+                                           dep_list=dep_list+avoid_list+avoid_zones)
         
         # Find which destination (from dep) is closest to the best_target
         dest_target = []
         for dest in possible_dest:
-            distance = distance_in_moves(dest , best_target)
-            dest_target.append([possible_dest , distance])
-        dest_target = sorted(dest_target , key=lambda x: x[1])
+            distance = distance_(dest , best_target)
+            dest_target.append([dest , distance])
+        dest_target = min(dest_target , key=lambda x: x[1])
+        best_dest = dest_target[0]
 
-        best_dest = dest_target[0][0][0]
+        print(f"from [{dep.x} {dep.y}] go to {best_dest}")
         
 
         # Now append this move to moves
@@ -97,6 +107,45 @@ def compute_move_expect(map_lists , grid):
 
 
 
+
+
+def make_avoid_zone (central_place):
+    # Make zone 2 cells on all sides of central_place
+    x = central_place.x
+    y = central_place.y
+
+    all_avoid_coord = [[x-1 , y-1],
+                       [x   , y-1],
+                       [x+1 , y-1],
+                       [x+1 , y  ],
+                       [x+1 , y+1],
+                       [x   , y+1],
+                       [x-1 , y+1],
+                       [x-1 , y  ],
+                       
+                       [x-2 , y-2],
+                       [x-1 , y-2],
+                       [x   , y-2],
+                       [x+1 , y-2],
+                       [x+2 , y-2],
+                       [x+2 , y-1],
+                       [x+2 , y  ],
+                       [x+2 , y+1],
+                       [x+2 , y+2],
+                       [x+1 , y+2],
+                       [x   , y+2],
+                       [x-1 , y+2],
+                       [x-2 , y+2],
+                       [x-2 , y+1],
+                       [x-2 , y  ],
+                       [x-2 , y-1]]
+    
+    out = [] # [Place]
+
+    for coord in all_avoid_coord:
+        out.append(Place([coord[0] , coord[1] , 0 , 0 , 0]))
+
+    return out
 
 
 
@@ -141,6 +190,30 @@ def compute_expected_outcome_value(E1 : int, E2: int, enemy: bool, get_enemy=Fal
     if get_enemy:
         return E1 , E2
     return E1
+
+
+
+def distance_(pos1 , pos2):
+    x1 = None
+    y1 = None
+    x2 = None
+    y2 = None
+
+    if type(pos1) == Place:
+        x1 = pos1.x
+        y1 = pos1.y
+    elif type(pos1) == list:
+        x1 = pos1[0]
+        y1 = pos1[1]
+        
+    if type(pos2) == Place:
+        x2 = pos2.x
+        y2 = pos2.y
+    elif type(pos2) == list:
+        x2 = pos2[0]
+        y2 = pos2[1]
+
+    return sqrt( (x1 - x2)**2 + (y1 - y2)**2 )
 
 
 
