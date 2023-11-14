@@ -29,26 +29,31 @@ def compute_move_expect(map_lists , grid):
         ene_sp = 0
 
 
+    sent_b_trg = []
+
     for dep in dep_list:
         n_in_dep = dep.get_n_from_sp_int(species)
 
         # 1st make a list of targets and the value to go to them (humans and enemies combined)
-        combined_list = [] # [ [target , value] , ... ]
+        combined_list = [] # [ [target , value , n_humans , n_enemies] , ... ]
         avoid_list = []    # [ target , ... ]
-
+        avoid_to_swap = []
         
         for target in target_human:
             distance = float(distance_(dep , target))
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
                                                             E2=target.humans,
                                                             enemy=False)
+            
+            value = expected_value
+            if distance != 0:
+                value = expected_value/distance
+
             if expected_value < n_in_dep:
                 avoid_list.append(target)
+                avoid_to_swap.append([target , value , target.humans , 0])
             else:
-                value = expected_value
-                if distance != 0:
-                    value = expected_value/distance
-                combined_list.append([target , value])
+                combined_list.append([target , value , target.humans , 0])
 
 
         
@@ -57,25 +62,48 @@ def compute_move_expect(map_lists , grid):
             expected_value = compute_expected_outcome_value(E1=n_in_dep ,
                                                             E2=target.get_n_from_sp_int(ene_sp),
                                                             enemy=True)
+            
+            value = expected_value
+            if distance != 0:
+                value = expected_value/distance
+            
             if expected_value < n_in_dep:
                 avoid_list.append(target)
+                avoid_to_swap.append([target , value , 0 , target.get_n_from_sp_int(ene_sp)])
             else:
-                value = expected_value
-                if distance != 0:
-                    value = expected_value/distance
-                combined_list.append([target , value])
+                combined_list.append([target , value , 0 , target.get_n_from_sp_int(ene_sp)])
 
 
+        # remove targets alread sent (used when there is splitting)
+        combined_list_nse = []
         
+        if len(sent_b_trg) == 0:
+            combined_list_nse = combined_list
+        else:
+            for i in sent_b_trg:
+                for j in combined_list:
+                    if compare_place_pos(i , j[0]) == False:
+                        combined_list_nse.append(j)
+
         
-        best_target = max(combined_list , key=lambda x: x[1])[0]
+        if len(combined_list_nse) == 0:
+            combined_list_nse = avoid_to_swap
+
+        
+        maxed_trg = max(combined_list_nse , key=lambda x: x[1])
+        best_target = maxed_trg[0]
+        sent_b_trg.append(best_target)
+
+
+
+
 
 
         # find bad targets and add them to an avoid list
         avoid_zones = []
         for avoid in avoid_list:
             avoid_zones += make_avoid_zone(avoid)
-
+  
         print("avoid" , avoid_list)
 
 
@@ -96,8 +124,25 @@ def compute_move_expect(map_lists , grid):
         print(f"from [{dep.x} {dep.y}] go to {best_dest}")
         
 
+        
+        # Send only needed amount
+        n_humans = maxed_trg[2]
+        n_enemies = maxed_trg[3]
+        n_to_send = n_in_dep
+
+
+        # Splitting
+        if n_humans == 0:
+            if n_in_dep >= 1.5*n_enemies:
+                n_to_send = 1.5*n_enemies
+        elif n_enemies == 0:
+            if n_in_dep >= n_humans:
+                n_to_send = n_humans
+        
+
+
         # Now append this move to moves
-        move = [dep.x , dep.y , n_in_dep , best_dest[0] , best_dest[1]]
+        move = [dep.x , dep.y , n_to_send , best_dest[0] , best_dest[1]]
         moves.append(move)
 
 
