@@ -110,3 +110,19 @@ def find_possible_dest (pos , grid , dep_list):
 
     # out is avoid walls + avoid departure places
     return out
+
+
+
+def find_at_coord (array_of_pos , coords):
+    """
+    In:
+        array of of pos     [Place]
+        coord               [x,y]
+    Return
+        Place
+    """
+    for place in array_of_pos:
+        if place.x == coords[0] and place.y == coords[1]:
+            return place # Place avec les occupants (Place.humans , ...)
+    return Place([coords[0] , coords[1] , 0 , 0 , 0]) # Place vide
+
