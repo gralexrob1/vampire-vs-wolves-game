@@ -132,13 +132,14 @@ def compute_move_expect(map_lists , grid):
 
 
         # Splitting
+        """
         if n_humans == 0:
             if n_in_dep >= 1.5*n_enemies:
                 n_to_send = 1.5*n_enemies
         elif n_enemies == 0:
             if n_in_dep >= n_humans:
                 n_to_send = n_humans
-        
+        """
 
 
         # Now append this move to moves
