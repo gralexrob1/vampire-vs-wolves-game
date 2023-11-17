@@ -140,6 +140,7 @@ class MapManager:
         elif message[0] == "hum":
             self.houses = message[1]
             self.received_data[1] = 1
+            print("HOUSES" , self.houses)
         elif message[0] == "hme":
             self.start_pos = message[1]
             self.received_data[2] = 1
@@ -162,3 +163,26 @@ class MapManager:
         for place in self.map:
             out += place.__str__()
         return out
+
+
+
+    def total_number(self , human:bool=False , vampires:bool=False , werewolves:bool=False):
+        """
+        Return the total number of humans or vampires of werewolves in the map
+        """
+        n_human = 0
+        n_vampi = 0
+        n_wolve = 0
+
+        for place in self.map:
+            n_human += place.humans
+            n_vampi += place.vampires
+            n_wolve += place.werewolves
+
+        if human:
+            return n_human
+        elif vampires:
+            return n_vampi
+        elif werewolves:
+            return n_wolve
+            
