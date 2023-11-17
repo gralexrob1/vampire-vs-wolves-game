@@ -46,3 +46,7 @@ class Place:
             return 0
         elif self.werewolves != 0:
             return 1
+        
+    def get_coords(self):
+        return [self.x , self.y]
+    
