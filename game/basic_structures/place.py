@@ -20,7 +20,7 @@ class Place:
     def __str__(self):
         return f"P[{self.x} {self.y} {self.humans} {self.vampires} {self.werewolves}]"
 
-    def get_n_from_sp_int(self , sp):
+    def get_n_from_sp_int(self , sp:int):
         """
         Get the number of species in Place from int value:
         vampires   : 0
@@ -50,7 +50,7 @@ class Place:
     def get_coords(self):
         return [self.x , self.y]
     
-    def modify_n_sp(self , species , number):
+    def modify_n_sp(self , species:int , number:int):
         """
         Modify the number of species in Place
         vampires   : 0
