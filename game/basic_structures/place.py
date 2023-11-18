@@ -50,3 +50,17 @@ class Place:
     def get_coords(self):
         return [self.x , self.y]
     
+    def modify_n_sp(self , species , number):
+        """
+        Modify the number of species in Place
+        vampires   : 0
+        werewolves : 1
+        """
+        if species == 0:
+            self.vampires += number
+        elif species == 1:
+            self.werewolves += number
+        else:
+            print("species not set")
+
+    
