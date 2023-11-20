@@ -17,7 +17,7 @@ class Place:
     def make_array(self):
         return [self.x , self.y , self.humans , self.vampires , self.werewolves]
 
-    def __str__(self):
+    def __repr__(self):
         return f"P[{self.x} {self.y} {self.humans} {self.vampires} {self.werewolves}]"
 
     def get_n_from_sp_int(self , sp:int):
