@@ -61,38 +61,5 @@ def compute_move_template(map_lists , grid):
 
     return len(moves) , moves
 
-# intution alpha-beta
-def compute_move_alpha_beta(map_lists, grid, depth, alpha, beta, maximizing_player):
-    """
-    Template for a compute_move_function
-    """    
-    dep_list = map_lists[0]     # [Place] list where there are some of current species
-    target_human = map_lists[1] # [Place] list of humans
-    target_enemy = map_lists[2] # [Place] list of enemies
- 
-    if maximizing_player:
-        value = float('-inf')
-        for dep in dep_list:
-            possible_moves = find_possible_dest(pos = [dep.x , dep.y], 
-                                                grid = grid,
-                                                dep_list = dep_list)
-            for move in possible_moves:
-                new_state = make_move(move)
-                value = max(value, compute_move_alpha_beta(new_state, depth - 1, alpha, beta, False))
-                alpha = max(alpha, value)
-                if beta <= alpha:
-                    break  # Beta cut-off
-        return value
-    else:
-        value = float('inf')
-        for move in find_possible_dest(pos = [dep.x , dep.y], 
-                                                grid = grid,
-                                                dep_list = dep_list)
-            new_state = make_move(state, move)
-            value = min(value, alpha_beta_search(new_state, depth - 1, alpha, beta, True))
-            beta = min(beta, value)
-            if beta <= alpha:
-                break  # Alpha cut-off
 
-def make_move():
     
