@@ -1,16 +1,16 @@
 from basic_structures.place import Place
 from move_algorithms.helper_functions import *
-
+from move_algorithms.helper_functions import distance_in_moves
 
 class MapManager:
     def __init__(self):
-        self.map = [] # [Place]
+        self.map = []                        # [Place]
         self.initial_map_set = False
-        self.species = -1 # not defined : -1 , vampires : 0 , werewolves : 1
+        self.species = -1                    # not defined : -1 , vampires : 0 , werewolves : 1
         self.species_is_set = False
         self.received_data = [0 , 0 , 0 , 0] # [set , hum , hme , map]
-        self.grid = [0,0]
-        self.start_pos = [0,0]
+        self.grid = [0,0]                    # [m,n]
+        self.start_pos = [0,0]               # [x,y]
 
 
     def change_with_updated_map(self , map_place_array , save=False) -> [Place]:
@@ -97,10 +97,14 @@ class MapManager:
         """
         clean = []
         for part in self.map:
-            if part.humans != 0 and part.vampires != 0 and part.werewolves != 0:
+            if part.humans != 0:
+                clean.append(part)
+            elif part.vampires != 0:
+                clean.append(part)
+            elif part.werewolves != 0:
                 clean.append(part)
         self.map = clean
-
+    
 
     def find_species(self , start_map , start_pos):
         """
@@ -140,7 +144,7 @@ class MapManager:
         elif message[0] == "hum":
             self.houses = message[1]
             self.received_data[1] = 1
-            print("HOUSES" , self.houses)
+            #print("HOUSES" , self.houses)
         elif message[0] == "hme":
             self.start_pos = message[1]
             self.received_data[2] = 1
@@ -185,4 +189,49 @@ class MapManager:
             return n_vampi
         elif werewolves:
             return n_wolve
-            
+
+
+    def longest_distance(self):
+        """
+        Out: the longest distance (in moves) of the given map,
+             from top left corner to bottom right corner.
+        """ 
+        return distance_in_moves([0,0] , self.grid)
+
+
+    def apply_moves(self , move_list , save=False , debug=False):
+        """
+        ----- Experimental -----
+        In:
+            move_list    [Move]
+            save          bool
+
+        Apply [Move] to MapManager.map (instead of upd_list from server)
+        Requires that MapManager.species has been set
+        """
+        print("IN MAP :" , self.map) if debug else None
+        
+        out_map = self.map
+        for move in move_list:
+            print(move) if debug else None
+            # Remove from origin
+            for i , place in enumerate(out_map):
+                if place.x == move.x1 and place.y == move.y1:
+                    out_map[i].modify_n_sp(self.species , -move.n)
+                    
+            # Add at destination
+            place_in_map = False
+            for i , place in enumerate(out_map):
+                if place.x == move.x2 and place.y == move.y2:
+                    place_in_map = True
+                    out_map[i].modify_n_sp(self.species , move.n)
+
+            if place_in_map == False:
+                new_place = Place([move.x2 , move.y2 , 0 , 0 , 0])
+                new_place.modify_n_sp(self.species , move.n)
+                out_map.append(new_place)
+
+        if save:
+            self.map = out_map
+            self.clean_map()
+            print("OUT MAP :" , self.map) if debug else None
