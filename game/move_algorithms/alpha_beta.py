@@ -85,7 +85,7 @@ def compute_move_alpha_beta(map_lists, grid, heuristic, depth, alpha, beta, maxi
         value = float('inf')
         for move in find_possible_dest(pos = [dep.x , dep.y], 
                                                 grid = grid,
-                                                dep_list = dep_list)
+                                                dep_list = dep_list):
             new_state = make_move(state, move)
             value = min(value, alpha_beta_search(new_state, depth - 1, alpha, beta, True))
             beta = min(beta, value)
