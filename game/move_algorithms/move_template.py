@@ -60,3 +60,6 @@ def compute_move_template(map_lists , grid):
     # add code here ...
 
     return len(moves) , moves
+
+
+    
