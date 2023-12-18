@@ -3,19 +3,21 @@ import time
 from server_interaction.client import ClientSocket
 from managers.game_manager import GameManager
 
-game_manager = GameManager()
-
 
 class Args:
-    def __init__(self , ip , port, strategy):
+    def __init__(self, ip="localhost", port=5555, strategy='random'):
         self.ip = ip
         self.port = port
         self.strategy = strategy
 
 
-def play_game(strategy, args):
+def play_game(args):
+
+    game_manager = GameManager()
+
     client_socket = ClientSocket(args.ip, args.port)
     client_socket.send_nme("GGs AI v2")
+    
     # set message
     message = client_socket.get_message()
     game_manager.map.initial_game_update(message)
@@ -43,7 +45,11 @@ def play_game(strategy, args):
             
 
 if __name__ == '__main__':
-    ip = str(sys.argv[1]) # "localhost"
-    port = int(sys.argv[2]) # 5555
-    strategy = str(sys.argv[3]) # "random" or "seek"
-    play_game(strategy=strategy , args=Args(ip=ip , port=port, strategy=strategy))
+
+    args =  Args(
+        ip = str(sys.argv[1]),
+        port = int(sys.argv[2]),
+        strategy = str(sys.argv[3])
+    )
+
+    play_game(args)
