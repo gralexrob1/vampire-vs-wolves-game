@@ -1,4 +1,4 @@
-from heuristics.heuristics import *
+from agents.heuristics import *
 
 
 class AlphaBeta:
