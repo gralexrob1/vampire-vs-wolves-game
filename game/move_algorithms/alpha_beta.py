@@ -191,7 +191,7 @@ def evaluate(map_lists, species):
 
     # Combine scores with appropriate weights
     w_win = 1000000
-    w_delta = 1000
+    w_delta = 10000
     w_humans_to_eat = 1000
     w_enemies_to_eat = 800
     w_enemies_to_flee = 300
