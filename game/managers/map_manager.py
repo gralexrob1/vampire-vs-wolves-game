@@ -155,7 +155,7 @@ class MapManager:
             if not self.initial_map_set:
                 self.initial_map_set = True
                 self.change_with_updated_map(message[1] , save=True)
-                print(f"initial map set {self.map}")
+                # print(f"initial map set {self.map}")
                 
         if sum(self.received_data) == 4:
             # All data received

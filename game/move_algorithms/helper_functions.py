@@ -126,6 +126,9 @@ def find_possible_dest (pos , grid , dep_list):
 
 
 def get_nearest_groups(map_lists , species):
+    """
+    Returns distances in move
+    """
 
     dep_list = map_lists[0]
     target_human = map_lists[1]
@@ -148,8 +151,19 @@ def get_nearest_groups(map_lists , species):
         if 1.5*ene.get_n_from_sp_int(ene_sp) >= dep.get_n_from_sp_int(species):
             ene_dist_2.append(distance_in_moves(ene , dep))
 
-    nearest_hum_i_can_eat = min(hu_dist)
-    nearest_ene_i_can_eat = min(ene_dist)
-    nearest_ene_that_can_eat_me = min(ene_dist_2)
+    if not hu_dist:
+        nearest_hum_i_can_eat = 0
+    else:
+        nearest_hum_i_can_eat = min(hu_dist)
+
+    if not ene_dist:
+        nearest_ene_i_can_eat = 0
+    else:
+        nearest_ene_i_can_eat = min(ene_dist)
+
+    if not ene_dist_2:
+        nearest_ene_that_can_eat_me = 0
+    else: 
+        nearest_ene_that_can_eat_me = min(ene_dist_2)
 
     return nearest_hum_i_can_eat , nearest_ene_i_can_eat , nearest_ene_that_can_eat_me

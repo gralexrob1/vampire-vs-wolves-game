@@ -190,11 +190,54 @@ def evaluate(map_lists, species):
     nearest_hum_i_can_eat , nearest_ene_i_can_eat , nearest_ene_that_can_eat_me = get_nearest_groups(map_lists, species)
 
     # Combine scores with appropriate weights
-    total_score = 1000*win \
-        + 10 * delta_species \
-        + 10 * nearest_hum_i_can_eat \
-        + 10 * nearest_ene_i_can_eat \
-        - 30 / nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
+    w_win = 1000000
+    w_delta = 10
+    w_humans_to_eat = 1000
+    w_enemies_to_eat = 800
+    w_enemies_to_flee = 300
+
+    total_score = w_win * win
+
+    total_score += w_delta * delta_species
+    # a potential augmentation of 5 allies would give:
+    # for a weight = 100: score of 500
+    # for a weight = 10: score of 50
+
+    if nearest_hum_i_can_eat != 0:
+        # we want to improve heuristic
+        # when minimizing the distance
+        # max distance is 15 (1/15 = 0.06)
+        # w around 100 would give score around 6
+        # w around 1000 would give score around 60
+        total_score += 1 / nearest_hum_i_can_eat * w_humans_to_eat
+    
+    if nearest_ene_i_can_eat != 0:
+        # we want to improve heuristic
+        # when minimizing the distance
+        # max distance is 15 (1/15 = 0.06)
+        # w around 100 would give score around 6
+        # w around 1000 would give score around 60
+        # we prefer eating humans thatn enemies in general
+        total_score += 1 / nearest_ene_i_can_eat * w_enemies_to_eat
+
+    if nearest_ene_i_can_eat != 0:
+        # we want to improve heuristic
+        # when minimizing the distance
+        # max distance is 15 (1/15 = 0.06)
+        # w around 100 would give score around 6
+        # w around 1000 would give score around 60
+        # we prefer eating humans thatn enemies in general
+        total_score += 1 / nearest_ene_i_can_eat * w_enemies_to_eat
+
+    
+    if nearest_ene_that_can_eat_me != 0:
+        # we want to improve heuristic
+        # when maximizing the distance
+        # max distance is 15 (1/15 = 0.06)
+        # w around 100 would give score around 6
+        # w around 1000 would give score around 60
+        # we want to flee only when near enemy (3 cases)
+        total_score -=  w_enemies_to_flee * nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
 
     return total_score
 
