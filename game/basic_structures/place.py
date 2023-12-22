@@ -63,4 +63,16 @@ class Place:
         else:
             print("species not set")
 
+    def modify_n_en(self , species:int , number:int):
+        """
+        Modify the number of enemy in Place
+        vampires   : 0
+        werewolves : 1
+        """
+        if species == 0:
+            self.werewolves += number
+        elif species == 1:
+            self.vampires += number
+        else:
+            print("species not set")
     
