@@ -89,84 +89,32 @@ def alpha_beta_search(map_lists, grid, species, depth, alpha, beta, maximizing_p
         return value
     
 
+
+
+
 # ##########
 # Heuristics
 # ##########
     
-
-def evaluate(map_lists, species):
-    """
-    1. Comparison of populations
-    2. Humans in neighborhood
-    3. Enemies in neighborhood
-    """
-
-    dep_list = map_lists[0]     # [Place] list where there are some of current species
-    target_human = map_lists[1] # [Place] list of humans
-    target_enemy = map_lists[2] # [Place] list of enemies
-
-    # Factor to penalize if enemies are 1.5 times more numerous than us
-    enemy_factor = 1.5
-
-    # 1. Total number of our species in relation to enemies
-    if species == 0:
-        species_score = sum([dep.vampires for dep in dep_list])
-        enemy_score = sum([target_en.werewolves for target_en in target_enemy])
-    else:
-        species_score = sum([dep.werewolves for dep in dep_list])
-        enemy_score = sum([target_en.vampires for target_en in target_enemy])
-
-    species_enemy_ratio = species_score / max(1, (enemy_factor * enemy_score))
-
-    # 2. Number of humans in the vicinity
-    human_score = 0
-    for human in target_human:
-        distance = min([abs(dep.x - human.x) + abs(dep.y - human.y) for dep in dep_list])
-        if distance <= 2:  # Consider humans within a distance of 2
-            human_score += human.humans
-
-    # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
-    enemy_score_vicinity = 0
-    for enemy in target_enemy:
-        distance = min([abs(dep.x - enemy.x) + abs(dep.y - enemy.y) for dep in dep_list])
-        if distance <= 2:  # Consider enemies within a distance of 2
-            enemy_score_vicinity += enemy.vampires if species == 1 else enemy.werewolves
-
-    # Apply malus if enemies are 1.5 times more numerous than us
-    if enemy_score_vicinity > enemy_factor * species_score:
-        enemy_score_vicinity -= 0.5 * enemy_score_vicinity
-
-    # Combine scores with appropriate weights
-    total_score = 0.5 * species_enemy_ratio + 0.3 * human_score - 0.2 * enemy_score_vicinity
-
-    return total_score
 
 
 
 
 # def evaluate(map_lists, species):
 #     """
-#     Updated heuristic function to evaluate the state of the game.
+#     1. Comparison of populations
+#     2. Humans in neighborhood
+#     3. Enemies in neighborhood
 #     """
-
-#     print('\n Call to function evaluate')
-#     print("\t evaluate INPUT")
-#     print(f"\t\t map_lists = {map_lists}")
-
 
 #     dep_list = map_lists[0]     # [Place] list where there are some of current species
 #     target_human = map_lists[1] # [Place] list of humans
 #     target_enemy = map_lists[2] # [Place] list of enemies
 
-#     # 0. a. Check Victory
-#     if not target_enemy:
-#         win = 1
-#     else: 
-#         win = 0
+#     # Factor to penalize if enemies are 1.5 times more numerous than us
+#     enemy_factor = 1.5
 
 #     # 1. Total number of our species in relation to enemies
-#     species_enemy_ratio = 0
-    
 #     if species == 0:
 #         species_score = sum([dep.vampires for dep in dep_list])
 #         enemy_score = sum([target_en.werewolves for target_en in target_enemy])
@@ -174,23 +122,83 @@ def evaluate(map_lists, species):
 #         species_score = sum([dep.werewolves for dep in dep_list])
 #         enemy_score = sum([target_en.vampires for target_en in target_enemy])
 
-#     # species_enemy_ratio = species_score / max(1, (enemy_factor * enemy_score))
-#     # print(f"\t Ally vs Enemy: {species_enemy_ratio}")
-        
-#     delta_species = species_score - enemy_score
-#     # print(f"\t Ally vs Enemy: {delta_species}")
+#     species_enemy_ratio = species_score / max(1, (enemy_factor * enemy_score))
 
-#     # 2. Nearest groups
-#     nearest_hum_i_can_eat , nearest_ene_i_can_eat , nearest_ene_that_can_eat_me = get_nearest_groups(map_lists, species)
+#     # 2. Number of humans in the vicinity
+#     human_score = 0
+#     for human in target_human:
+#         distance = min([abs(dep.x - human.x) + abs(dep.y - human.y) for dep in dep_list])
+#         if distance <= 2:  # Consider humans within a distance of 2
+#             human_score += human.humans
+
+#     # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
+#     enemy_score_vicinity = 0
+#     for enemy in target_enemy:
+#         distance = min([abs(dep.x - enemy.x) + abs(dep.y - enemy.y) for dep in dep_list])
+#         if distance <= 2:  # Consider enemies within a distance of 2
+#             enemy_score_vicinity += enemy.vampires if species == 1 else enemy.werewolves
+
+#     # Apply malus if enemies are 1.5 times more numerous than us
+#     if enemy_score_vicinity > enemy_factor * species_score:
+#         enemy_score_vicinity -= 0.5 * enemy_score_vicinity
 
 #     # Combine scores with appropriate weights
-#     total_score = 1000*win \
-#         + 10 * delta_species \
-#         + 10 * nearest_hum_i_can_eat \
-#         + 10 * nearest_ene_i_can_eat \
-#         - 30 / nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
+#     total_score = 0.5 * species_enemy_ratio + 0.3 * human_score - 0.2 * enemy_score_vicinity
 
 #     return total_score
+
+
+
+
+
+def evaluate(map_lists, species):
+    """
+    Updated heuristic function to evaluate the state of the game.
+    """
+
+    # print('\n Call to function evaluate')
+    # print("\t evaluate INPUT")
+    # print(f"\t\t map_lists = {map_lists}")
+
+    dep_list = map_lists[0]     # [Place] list where there are some of current species
+    target_human = map_lists[1] # [Place] list of humans
+    target_enemy = map_lists[2] # [Place] list of enemies
+
+    # 0. a. Check Victory
+    if not target_enemy:
+        win = 1
+    else: 
+        win = 0
+
+    # 1. Total number of our species in relation to enemies
+    species_enemy_ratio = 0
+    
+    if species == 0:
+        species_score = sum([dep.vampires for dep in dep_list])
+        enemy_score = sum([target_en.werewolves for target_en in target_enemy])
+    else:
+        species_score = sum([dep.werewolves for dep in dep_list])
+        enemy_score = sum([target_en.vampires for target_en in target_enemy])
+
+    # species_enemy_ratio = species_score / max(1, (enemy_factor * enemy_score))
+    # print(f"\t Ally vs Enemy: {species_enemy_ratio}")
+        
+    delta_species = species_score - enemy_score
+    # print(f"\t Ally vs Enemy: {delta_species}")
+
+    # 2. Nearest groups
+    nearest_hum_i_can_eat , nearest_ene_i_can_eat , nearest_ene_that_can_eat_me = get_nearest_groups(map_lists, species)
+
+    # Combine scores with appropriate weights
+    total_score = 1000*win \
+        + 10 * delta_species \
+        + 10 * nearest_hum_i_can_eat \
+        + 10 * nearest_ene_i_can_eat \
+        - 30 / nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
+
+    return total_score
+
+
 
 
 
@@ -242,23 +250,6 @@ def evaluate(map_lists, species):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # def evaluate(map_lists, species, depth):
 #     """
 #     Updated heuristic function to evaluate the state of the game.
@@ -302,6 +293,9 @@ def evaluate(map_lists, species):
 #     total_score = 10 * species_enemy_ratio + 0.3 * human_score - 0.2 * enemy_score_vicinity
 
 #     return total_score
+
+
+
 
 
 # def evaluate(map_lists, species):
@@ -348,6 +342,8 @@ def evaluate(map_lists, species):
 #     total_score =  0.7*species_enemy_ratio  +  0.2*human_score - 0.1*enemy_score_vicinity
 
 #     return total_score
+
+
 
 
 
