@@ -1,5 +1,9 @@
-from basic_structures.place import Place
+"""
+This file gathers all the metrics susceptible of helping in heuristic computation.
+"""
 
+
+from basic_structures.place import Place
 
 
 def compare_place_pos(pos1:Place , pos2:Place) -> bool:
@@ -58,9 +62,6 @@ def distance_in_moves(pos1 , pos2 , diag_weight=1):
         return min_diag
 
 
-
-
-
 def find_possible_dest (pos , grid , dep_list):
     """
     In:
@@ -73,19 +74,27 @@ def find_possible_dest (pos , grid , dep_list):
     Find the possible destinations around pos, given that the departure places
     are not valid destinations
     """
+
+    # print("\n Call to function find_possible_dest")
+    # print("\t find_possible_dest INPUTS")
+    # print(f"\t\t pos = {pos}")
+    # print("\n")
+
     x = pos[0]
     y = pos[1]
     max_y = grid[0]-1
     max_x = grid[1]-1
         
-    all_dest = [[x-1 , y-1],
-                [x   , y-1],
-                [x+1 , y-1],
-                [x+1 , y  ],
-                [x+1 , y+1],
-                [x   , y+1],
-                [x-1 , y+1],
-                [x-1 , y  ]]
+    all_dest = [
+        [x-1 , y-1],    
+        [x   , y-1],
+        [x+1 , y-1],
+        [x+1 , y  ],
+        [x+1 , y+1],
+        [x   , y+1],
+        [x-1 , y+1],
+        [x-1 , y  ]
+    ]
 
     possible_dest = []
 
@@ -109,20 +118,38 @@ def find_possible_dest (pos , grid , dep_list):
             out.append(dest)
 
     # out is avoid walls + avoid departure places
+            
+    # print("\t find_possible_dest OUTPUTS")
+    # print(f"\t\t map_lists = {out}")
+
     return out
 
 
+def get_nearest_groups(map_lists , species):
 
-def find_at_coord (array_of_pos , coords):
-    """
-    In:
-        array of of pos     [Place]
-        coord               [x,y]
-    Return
-        Place
-    """
-    for place in array_of_pos:
-        if place.x == coords[0] and place.y == coords[1]:
-            return place # Place avec les occupants (Place.humans , ...)
-    return Place([coords[0] , coords[1] , 0 , 0 , 0]) # Place vide
+    dep_list = map_lists[0]
+    target_human = map_lists[1]
+    target_enemy = map_lists[2]
 
+    ene_sp = 1 if species==0 else 0
+
+    dep = dep_list[0]
+
+    hu_dist = []
+    for hum in target_human:
+        if hum.humans <= dep.get_n_from_sp_int(species):
+            hu_dist.append(distance_in_moves(hum , dep))
+
+    ene_dist = []
+    ene_dist_2 = []
+    for ene in target_enemy:
+        if ene.get_n_from_sp_int(ene_sp) <= dep.get_n_from_sp_int(species)*1.5:
+            ene_dist.append(distance_in_moves(ene , dep))
+        if 1.5*ene.get_n_from_sp_int(ene_sp) >= dep.get_n_from_sp_int(species):
+            ene_dist_2.append(distance_in_moves(ene , dep))
+
+    nearest_hum_i_can_eat = min(hu_dist)
+    nearest_ene_i_can_eat = min(ene_dist)
+    nearest_ene_that_can_eat_me = min(ene_dist_2)
+
+    return nearest_hum_i_can_eat , nearest_ene_i_can_eat , nearest_ene_that_can_eat_me

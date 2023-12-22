@@ -1,3 +1,12 @@
+"""
+This file stores the heuristic explored.
+Each heuristic function only takes state as argument.
+All the functions that allow to compute metrics for the heuristics are stored in the metrics.py file.
+
+max_ally_heuristic
+"""
+
+
 from heuristics.metrics import *
 
 
