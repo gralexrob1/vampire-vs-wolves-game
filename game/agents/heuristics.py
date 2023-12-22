@@ -7,7 +7,7 @@ max_ally_heuristic
 """
 
 
-from heuristics.metrics import *
+from agents.metrics import *
 
 
 def max_ally_heuristic(state):

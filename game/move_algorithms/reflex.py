@@ -3,14 +3,12 @@ from move_algorithms.helper_functions import *
 from math import sqrt
 
 """
-Still working on this
-
 Function based on:
     max expected value
     min distance to travel
 """
 
-def compute_move_expect(map_lists , grid):
+def compute_move_expect(map_lists , grid , split=True):
     dep_list = map_lists[0]
     target_human = map_lists[1]
     target_enemy = map_lists[2]
@@ -90,8 +88,16 @@ def compute_move_expect(map_lists , grid):
             combined_list_nse = avoid_to_swap
 
         
-        maxed_trg = max(combined_list_nse , key=lambda x: x[1])
-        best_target = maxed_trg[0]
+        
+        best_target = target_enemy[0]
+        if len(combined_list_nse) != 0:
+            maxed_trg = max(combined_list_nse , key=lambda x: x[1])
+            best_target = maxed_trg[0]
+
+        
+        #maxed_trg = max(combined_list_nse , key=lambda x: x[1])
+        #best_target = maxed_trg[0]
+        print(best_target)
         sent_b_trg.append(best_target)
 
 
@@ -102,9 +108,12 @@ def compute_move_expect(map_lists , grid):
         # find bad targets and add them to an avoid list
         avoid_zones = []
         for avoid in avoid_list:
-            avoid_zones += make_avoid_zone(avoid)
+            if avoid.humans != 0:
+                avoid_zones.append(avoid)
+            else:
+                avoid_zones += make_avoid_zone(avoid)
   
-        print("avoid" , avoid_list)
+        #print("avoid" , avoid_list)
 
 
 
@@ -118,33 +127,37 @@ def compute_move_expect(map_lists , grid):
         for dest in possible_dest:
             distance = distance_(dest , best_target)
             dest_target.append([dest , distance])
-        dest_target = min(dest_target , key=lambda x: x[1])
-        best_dest = dest_target[0]
 
-        print(f"from [{dep.x} {dep.y}] go to {best_dest}")
-        
+        if len(dest_target) != 0:
+            dest_target = min(dest_target , key=lambda x: x[1])
+            best_dest = dest_target[0]
 
-        
-        # Send only needed amount
-        n_humans = maxed_trg[2]
-        n_enemies = maxed_trg[3]
-        n_to_send = n_in_dep
+            #print(f"from [{dep.x} {dep.y}] go to {best_dest}")
+            
 
+            
+            # Send only needed amount
+            n_humans = maxed_trg[2]
+            n_enemies = maxed_trg[3]
+            n_to_send = n_in_dep
 
-        # Splitting
-        """
-        if n_humans == 0:
-            if n_in_dep >= 1.5*n_enemies:
-                n_to_send = 1.5*n_enemies
-        elif n_enemies == 0:
-            if n_in_dep >= n_humans:
-                n_to_send = n_humans
-        """
+            
 
 
-        # Now append this move to moves
-        move = [dep.x , dep.y , n_to_send , best_dest[0] , best_dest[1]]
-        moves.append(move)
+            # Splitting
+            if split and not(len(target_human) == 0 and len(target_enemy) == 1):
+                if n_humans == 0:
+                    if n_in_dep >= 1.5*n_enemies:
+                        n_to_send = int(1.5*n_enemies)
+                elif n_enemies == 0:
+                    if n_in_dep >= n_humans:
+                        n_to_send = n_humans
+            
+
+
+            # Now append this move to moves
+            move = [dep.x , dep.y , n_to_send , best_dest[0] , best_dest[1]]
+            moves.append(move)
 
 
 
@@ -167,24 +180,9 @@ def make_avoid_zone (central_place):
                        [x+1 , y+1],
                        [x   , y+1],
                        [x-1 , y+1],
-                       [x-1 , y  ],
+                       [x-1 , y  ]]
                        
-                       [x-2 , y-2],
-                       [x-1 , y-2],
-                       [x   , y-2],
-                       [x+1 , y-2],
-                       [x+2 , y-2],
-                       [x+2 , y-1],
-                       [x+2 , y  ],
-                       [x+2 , y+1],
-                       [x+2 , y+2],
-                       [x+1 , y+2],
-                       [x   , y+2],
-                       [x-1 , y+2],
-                       [x-2 , y+2],
-                       [x-2 , y+1],
-                       [x-2 , y  ],
-                       [x-2 , y-1]]
+                       
     
     out = [] # [Place]
 
@@ -263,3 +261,22 @@ def distance_(pos1 , pos2):
 
 
 
+
+"""
+[x-2 , y-2],
+                       [x-1 , y-2],
+                       [x   , y-2],
+                       [x+1 , y-2],
+                       [x+2 , y-2],
+                       [x+2 , y-1],
+                       [x+2 , y  ],
+                       [x+2 , y+1],
+                       [x+2 , y+2],
+                       [x+1 , y+2],
+                       [x   , y+2],
+                       [x-1 , y+2],
+                       [x-2 , y+2],
+                       [x-2 , y+1],
+                       [x-2 , y  ],
+                       [x-2 , y-1]]
+"""
