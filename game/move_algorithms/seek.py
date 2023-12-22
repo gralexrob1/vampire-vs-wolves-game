@@ -2,11 +2,6 @@ from basic_structures.place import Place
 from move_algorithms.helper_functions import *
 
 
-"""
-Currently working on this
-"""
-
-
 def compute_move_seek(map_lists , grid):
     dep_list = map_lists[0]
     target_human = map_lists[1]
@@ -14,7 +9,7 @@ def compute_move_seek(map_lists , grid):
 
     mode = 1
     if len(target_human) == 0:
-        print("targeting enemies")
+        # print("targeting enemies")
         mode = 2
         target_human = target_enemy
 
@@ -59,7 +54,7 @@ def compute_move_seek(map_lists , grid):
             possible_found = True
             best_dep = dep_hum[1]
             best_hum = dep_hum[2]
-            print(f"sp {n_sp} - {n_hu} hu (1.5)")
+            # print(f"sp {n_sp} - {n_hu} hu (1.5)")
             break
 
     if not possible_found:
@@ -75,7 +70,7 @@ def compute_move_seek(map_lists , grid):
                 possible_found = True
                 best_dep = dep_hum[1]
                 best_hum = dep_hum[2]
-                print(f"sp {n_sp} - {n_hu} hu (1.2)")
+                # print(f"sp {n_sp} - {n_hu} hu (1.2)")
                 break
 
     # a dep -> hum with good odds found
@@ -102,7 +97,7 @@ def compute_move_seek(map_lists , grid):
             n = best_dep.werewolves
 
         move = [best_dep.x , best_dep.y , n , best_target[0] , best_target[1]]
-        print(f"send move : {move}")
+        # print(f"send move : {move}")
         return 1 , [move]
     
     else:
