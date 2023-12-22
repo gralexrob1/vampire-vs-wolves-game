@@ -259,133 +259,135 @@ def evaluate(map_lists, species):
 
 
 
-'''def evaluate(map_lists, species, depth):
-    """
-    Updated heuristic function to evaluate the state of the game.
-    """
-    dep_list = map_lists[0]     # [Place] list where there are some of current species
-    target_human = map_lists[1] # [Place] list of humans
-    target_enemy = map_lists[2] # [Place] list of enemies
+# def evaluate(map_lists, species, depth):
+#     """
+#     Updated heuristic function to evaluate the state of the game.
+#     """
+#     dep_list = map_lists[0]     # [Place] list where there are some of current species
+#     target_human = map_lists[1] # [Place] list of humans
+#     target_enemy = map_lists[2] # [Place] list of enemies
 
-    # Factor to penalize if enemies are 1.5 times more numerous than us
-    enemy_factor = 1.5
+#     # Factor to penalize if enemies are 1.5 times more numerous than us
+#     enemy_factor = 1.5
     
-    # 1. Total number of our species in relation to enemies
-    if species == 0:
-        species_score = sum([dep.vampires for dep in dep_list])
-        enemy_score = sum([target_en.werewolves for target_en in target_enemy])
-    else:
-        species_score = sum([dep.werewolves for dep in dep_list])
-        enemy_score = sum([target_en.vampires for target_en in target_enemy])
+#     # 1. Total number of our species in relation to enemies
+#     if species == 0:
+#         species_score = sum([dep.vampires for dep in dep_list])
+#         enemy_score = sum([target_en.werewolves for target_en in target_enemy])
+#     else:
+#         species_score = sum([dep.werewolves for dep in dep_list])
+#         enemy_score = sum([target_en.vampires for target_en in target_enemy])
 
-    species_enemy_ratio = species_score - enemy_score
+#     species_enemy_ratio = species_score - enemy_score
 
-    # 2. Number of humans in the vicinity
-    human_score = 0
-    for human in target_human:
-        distance = min([abs(dep.x - human.x) + abs(dep.y - human.y) for dep in dep_list])
-        if distance <= 3:  # Consider humans within a distance of 2
-            human_score += human.humans
+#     # 2. Number of humans in the vicinity
+#     human_score = 0
+#     for human in target_human:
+#         distance = min([abs(dep.x - human.x) + abs(dep.y - human.y) for dep in dep_list])
+#         if distance <= 3:  # Consider humans within a distance of 2
+#             human_score += human.humans
 
-    # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
-    enemy_score_vicinity = 0
-    for enemy in target_enemy:
-        distance = min([abs(dep.x - enemy.x) + abs(dep.y - enemy.y) for dep in dep_list])
-        if distance <= 3:  # Consider enemies within a distance of 2
-            enemy_score_vicinity += enemy.vampires if species == 1 else enemy.werewolves
+#     # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
+#     enemy_score_vicinity = 0
+#     for enemy in target_enemy:
+#         distance = min([abs(dep.x - enemy.x) + abs(dep.y - enemy.y) for dep in dep_list])
+#         if distance <= 3:  # Consider enemies within a distance of 2
+#             enemy_score_vicinity += enemy.vampires if species == 1 else enemy.werewolves
 
-    # Apply malus if enemies are 1.5 times more numerous than us
-    if enemy_score_vicinity > enemy_factor * species_score:
-        enemy_score_vicinity -= 0.5 * enemy_score_vicinity
+#     # Apply malus if enemies are 1.5 times more numerous than us
+#     if enemy_score_vicinity > enemy_factor * species_score:
+#         enemy_score_vicinity -= 0.5 * enemy_score_vicinity
 
-    # Combine scores with appropriate weights
-    total_score = 10 * species_enemy_ratio + 0.3 * human_score - 0.2 * enemy_score_vicinity
+#     # Combine scores with appropriate weights
+#     total_score = 10 * species_enemy_ratio + 0.3 * human_score - 0.2 * enemy_score_vicinity
 
-    return total_score'''
+#     return total_score
 
 
-'''def evaluate(map_lists, species):
-    """
-    Heuristic function to evaluate the state of the game.
-    """
-    dep_list = map_lists[0]     # [Place] list where there are some of the current species
-    target_human = map_lists[1] # [Place] list of humans
-    target_enemy = map_lists[2] # [Place] list of enemies
-    dep = dep_list[0]
-    n_sp = dep.get_n_from_sp_int(species)
+# def evaluate(map_lists, species):
+#     """
+#     Heuristic function to evaluate the state of the game.
+#     """
+#     dep_list = map_lists[0]     # [Place] list where there are some of the current species
+#     target_human = map_lists[1] # [Place] list of humans
+#     target_enemy = map_lists[2] # [Place] list of enemies
+#     dep = dep_list[0]
+#     n_sp = dep.get_n_from_sp_int(species)
 
-    # Factor to penalize if enemies are 1.5 times more numerous than us
+#     # Factor to penalize if enemies are 1.5 times more numerous than us
   
-    # 1. Total number of our species in relation to enemies
-    if species == 0:
-        species_score = sum([dep.vampires for dep in dep_list])
-        enemy_score = sum([target_en.werewolves for target_en in target_enemy])
-    else:
-        species_score = sum([dep.werewolves for dep in dep_list])
-        enemy_score = sum([target_en.vampires for target_en in target_enemy])
+#     # 1. Total number of our species in relation to enemies
+#     if species == 0:
+#         species_score = sum([dep.vampires for dep in dep_list])
+#         enemy_score = sum([target_en.werewolves for target_en in target_enemy])
+#     else:
+#         species_score = sum([dep.werewolves for dep in dep_list])
+#         enemy_score = sum([target_en.vampires for target_en in target_enemy])
 
-    species_enemy_ratio = species_score - enemy_score
+#     species_enemy_ratio = species_score - enemy_score
 
-    # 2. Number of humans in the nieghbordhood
-    human_score = 0
-    for human in target_human:
-        distance = distance_in_moves(dep, human) 
-        if dep.get_n_from_sp_int(species) > human.humans:
-            human_score += human.humans / max(1, distance)
+#     # 2. Number of humans in the nieghbordhood
+#     human_score = 0
+#     for human in target_human:
+#         distance = distance_in_moves(dep, human) 
+#         if dep.get_n_from_sp_int(species) > human.humans:
+#             human_score += human.humans / max(1, distance)
 
-    # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
-    enemy_score_vicinity = 0
-    for enemy in target_enemy:
-        distance = distance_in_moves(dep, enemy) # Manhattan distance
-        if species == 0:
-            if n_sp > enemy.werewolves:
-                enemy_score_vicinity += enemy.werewolves / max(1, distance)  # Avoid division by zero
-        else:
-            if n_sp > enemy.vampires:
-                enemy_score_vicinity += enemy.vampires / max(1, distance)
+#     # 3. Enemy numbers in the vicinity with a malus for 1.5 times more enemies
+#     enemy_score_vicinity = 0
+#     for enemy in target_enemy:
+#         distance = distance_in_moves(dep, enemy) # Manhattan distance
+#         if species == 0:
+#             if n_sp > enemy.werewolves:
+#                 enemy_score_vicinity += enemy.werewolves / max(1, distance)  # Avoid division by zero
+#         else:
+#             if n_sp > enemy.vampires:
+#                 enemy_score_vicinity += enemy.vampires / max(1, distance)
 
-    # Combine scores with appropriate weights
-    total_score =  0.7*species_enemy_ratio  +  0.2*human_score - 0.1*enemy_score_vicinity
+#     # Combine scores with appropriate weights
+#     total_score =  0.7*species_enemy_ratio  +  0.2*human_score - 0.1*enemy_score_vicinity
 
-    return total_score'''
+#     return total_score
 
-'''def evaluate(map_lists, species, depth):
-    """
-    Heuristic function to evaluate the state of the game.
-    """
-    dep_list = map_lists[0]     # [Place] list where there are some of the current species
-    target_human = map_lists[1] # [Place] list of humans
-    target_enemy = map_lists[2] # [Place] list of enemies
-    dep = dep_list[0]
-    n_sp = dep.get_n_from_sp_int(species)
 
-    # 1. Total number of our species in relation to enemies
-    if species == 0:
-        species_score = sum([dep.vampires for dep in dep_list])
-        enemy_score = sum([target_en.werewolves for target_en in target_enemy])
-    else:
-        species_score = sum([dep.werewolves for dep in dep_list])
-        enemy_score = sum([target_en.vampires for target_en in target_enemy])
 
-    species_enemy_diff = species_score - enemy_score
+# def evaluate(map_lists, species, depth):
+#     """
+#     Heuristic function to evaluate the state of the game.
+#     """
+#     dep_list = map_lists[0]     # [Place] list where there are some of the current species
+#     target_human = map_lists[1] # [Place] list of humans
+#     target_enemy = map_lists[2] # [Place] list of enemies
+#     dep = dep_list[0]
+#     n_sp = dep.get_n_from_sp_int(species)
 
-   # distance_with_humans_diff
+#     # 1. Total number of our species in relation to enemies
+#     if species == 0:
+#         species_score = sum([dep.vampires for dep in dep_list])
+#         enemy_score = sum([target_en.werewolves for target_en in target_enemy])
+#     else:
+#         species_score = sum([dep.werewolves for dep in dep_list])
+#         enemy_score = sum([target_en.vampires for target_en in target_enemy])
+
+#     species_enemy_diff = species_score - enemy_score
+
+#    # distance_with_humans_diff
     
-    sp_distance_to_human = float('inf')
-    for human in target_human:
-        sp_distance_to_human = min(sp_distance_to_human, distance_in_moves(dep, human))
+#     sp_distance_to_human = float('inf')
+#     for human in target_human:
+#         sp_distance_to_human = min(sp_distance_to_human, distance_in_moves(dep, human))
     
-    en_distance_to_human = float('inf')
-    for en in target_enemy:
-        for human in target_human:
-            en_distance_to_human = min(en_distance_to_human, distance_in_moves(en, human))
+#     en_distance_to_human = float('inf')
+#     for en in target_enemy:
+#         for human in target_human:
+#             en_distance_to_human = min(en_distance_to_human, distance_in_moves(en, human))
     
-    distance_with_humans_diff = sp_distance_to_human - en_distance_to_human
-    if depth < 3:
-        return 10*species_enemy_diff + distance_with_humans_diff
-    else :
-        return species_enemy_diff 
-    '''
+#     distance_with_humans_diff = sp_distance_to_human - en_distance_to_human
+#     if depth < 3:
+#         return 10*species_enemy_diff + distance_with_humans_diff
+#     else :
+#         return species_enemy_diff 
+    
 
         
    
