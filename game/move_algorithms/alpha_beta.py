@@ -191,7 +191,7 @@ def evaluate(map_lists, species):
 
     # Combine scores with appropriate weights
     w_win = 1000000
-    w_delta = 10
+    w_delta = 1000
     w_humans_to_eat = 1000
     w_enemies_to_eat = 800
     w_enemies_to_flee = 300
@@ -237,7 +237,7 @@ def evaluate(map_lists, species):
         # w around 100 would give score around 6
         # w around 1000 would give score around 60
         # we want to flee only when near enemy (3 cases)
-        total_score -=  w_enemies_to_flee * nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
+        total_score +=  w_enemies_to_flee * nearest_ene_that_can_eat_me # w / 3 ou w / 4 > les autres poids
 
     return total_score
 
